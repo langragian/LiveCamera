@@ -1,15 +1,17 @@
-# Redefine the URLs after kernel reset
-upcoming_url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSrRnjooHdnGL3OARim9-6gD4RjXDTFhVY3Lb_i5sxq6YQJsVOhlcOfVfHblkT-6w_bDugpee3wVs_W/pub?gid=0&single=true&output=csv"
-past_url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSrRnjooHdnGL3OARim9-6gD4RjXDTFhVY3Lb_i5sxq6YQJsVOhlcOfVfHblkT-6w_bDugpee3wVs_W/pub?gid=598421041&single=true&output=csv"
+# Re-import required module after code execution environment reset
+html_file_path = "/mnt/data/index.html"
 
-# Create the full HTML content
-html_final = f"""
+# Recreate the dynamic HTML file with provided CSV links
+upcoming_csv = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSrRnjooHdnGL3OARim9-6gD4RjXDTFhVY3Lb_i5sxq6YQJsVOhlcOfVfHblkT-6w_bDugpee3wVs_W/pub?gid=0&single=true&output=csv"
+past_csv = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSrRnjooHdnGL3OARim9-6gD4RjXDTFhVY3Lb_i5sxq6YQJsVOhlcOfVfHblkT-6w_bDugpee3wVs_W/pub?gid=598421041&single=true&output=csv"
+
+html_content = f"""
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Lights, Camera, UV!</title>
+  <title>Lights, Camera, UV! - Live</title>
   <style>
     body {{
       margin: 0;
@@ -68,36 +70,39 @@ html_final = f"""
 
   <script>
     async function loadMovies(sheetUrl, containerId) {{
-      const response = await fetch(sheetUrl);
-      const text = await response.text();
-      const rows = text.trim().split('\\n').slice(1); // Skip header
-      const container = document.getElementById(containerId);
-      container.innerHTML = '';
+      try {{
+        const response = await fetch(sheetUrl);
+        const text = await response.text();
+        const rows = text.trim().split('\\n').slice(1); // Skip header
+        const container = document.getElementById(containerId);
+        container.innerHTML = '';
 
-      rows.forEach(row => {{
-        const columns = row.split(',');
-        const date = columns[0];
-        const title = columns[1];
-        const picker = columns[2];
-        const movieDiv = document.createElement('div');
-        movieDiv.className = 'movie';
-        movieDiv.innerHTML = '<strong>Movie:</strong> ' + title + '<br>' +
-                             '<strong>Picked by:</strong> ' + picker + '<br>' +
-                             '<strong>Date:</strong> ' + date;
-        container.appendChild(movieDiv);
-      }});
+        rows.forEach(row => {{
+          const columns = row.split(',');
+          const date = columns[0];
+          const title = columns[1];
+          const picker = columns[2];
+          const movieDiv = document.createElement('div');
+          movieDiv.className = 'movie';
+          movieDiv.innerHTML = '<strong>Movie:</strong> ' + title + '<br>' +
+                               '<strong>Picked by:</strong> ' + picker + '<br>' +
+                               '<strong>Date:</strong> ' + date;
+          container.appendChild(movieDiv);
+        }});
+      }} catch (error) {{
+        document.getElementById(containerId).innerText = 'Failed to load movies.';
+        console.error("Error fetching sheet:", error);
+      }}
     }}
 
-    loadMovies("{upcoming_url}", "upcoming-movies");
-    loadMovies("{past_url}", "past-movies");
+    loadMovies("{upcoming_csv}", "upcoming-movies");
+    loadMovies("{past_csv}", "past-movies");
   </script>
 </body>
 </html>
 """
 
-# Save the HTML to a downloadable file
-html_output_path = "/mnt/data/index.html"
-with open(html_output_path, "w", encoding="utf-8") as f:
-    f.write(html_final)
+with open(html_file_path, "w", encoding="utf-8") as f:
+    f.write(html_content)
 
-html_output_path
+html_file_path
