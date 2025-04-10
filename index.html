@@ -1,125 +1,112 @@
-# Updated version with emblem and intro restored alongside Sheety integration
-
-html_with_intro_and_emblem = f"""
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Lights, Camera, UV!</title>
+  <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    body {{
+    body {
       margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #1e1e1e;
-      color: #f5f5f5;
-      line-height: 1.8;
-      padding: 20px;
-    }}
-    .container {{
-      max-width: 900px;
-      margin: auto;
-    }}
-    header {{
+      font-family: 'Work Sans', sans-serif;
+      background-color: #632b12;
+      color: #f9c14d;
+      line-height: 1.6;
+    }
+    header {
       text-align: center;
-      margin-bottom: 2rem;
-    }}
-    header img {{
-      width: 200px;
-      height: auto;
-    }}
-    h1 {{
-      color: #ffcc00;
-      margin: 1rem 0 0.5rem;
-    }}
-    .intro p {{
-      margin-bottom: 1.2rem;
-      text-align: justify;
-      font-size: 1.05rem;
-    }}
-    h2 {{
-      color: #ffcc00;
-      border-bottom: 2px solid #444;
-      padding-bottom: 0.3rem;
-    }}
-    .movie-list {{
-      margin: 1rem 0 2rem;
-    }}
-    .movie {{
-      background-color: #2a2a2a;
-      padding: 1rem;
-      border-radius: 8px;
+      padding: 2rem 1rem;
+    }
+    header img {
+      max-width: 200px;
       margin-bottom: 1rem;
-    }}
-    .movie strong {{
-      color: #ffffff;
-    }}
-    footer {{
-      text-align: center;
-      margin-top: 3rem;
-      color: #888;
-    }}
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2rem;
+    }
+    main {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+    h2 {
+      border-bottom: 2px solid #f9c14d;
+      padding-bottom: 0.5rem;
+    }
+    section {
+      margin-bottom: 2rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+    th, td {
+      text-align: left;
+      padding: 0.5rem;
+      border-bottom: 1px solid #f9c14d;
+    }
+    th {
+      background-color: #aa4d24;
+    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <img src="lights-camera-uv.jpg" alt="Lights Camera UV Logo" />
-      <h1>Lights, Camera, UV!</h1>
-    </header>
-
-    <div class="intro">
-      <p>Movies of faraway lands. Giving glimpses of a foreign culture, in a foreign tongue, yet shedding light on something of our own.</p>
-      <p>Welcome to <strong>Lights, Camera, UV!</strong></p>
+  <header>
+    <img src="ChatGPT Image Apr 10, 2025, 04_47_00 PM.png" alt="Lights, Camera, UV! Logo">
+    <h1>Lights, Camera, UV!</h1>
+  </header>
+  <main>
+    <section>
+      <p>Movies of faraway lands. Giving glimpses of a foreign culture, in a foreign tongue, yet shedding light on something near home.</p>
+      <p><strong>Welcome to Lights, Camera, UV!</strong></p>
       <p>A space for those who truly live and breathe cinema — not just as entertainment, but as art, culture, and storytelling.</p>
-      <p>This group is meant for movie connoisseurs and enthusiasts who appreciate brilliant films from across the globe — be it world cinema, Bollywood, Hollywood, indie gems, or rare festival classics. We would also welcome people into our group who want to start on a journey of exploring them.</p>
+      <p>This group is meant for movie connoisseurs and enthusiasts who appreciate brilliant films from across the globe — be it world cinema, Hollywood, indie gems, or rare festival classics. We would also welcome people into our group who want to start on a journey of exploring them.</p>
       <p>Here, we screen and discuss masterclass films that provoke thought, stir emotions, and offer a glimpse into faraway lands, unfamiliar cultures, and untold stories.</p>
       <p>Weekly screenings will be held in UV’s mini theatre, featuring classics, critically acclaimed films, hidden gems, and everything in between…</p>
-    </div>
+    </section><section>
+  <h2>Upcoming Screenings</h2>
+  <div id="upcoming"></div>
+</section>
 
-    <h2>Upcoming Screenings</h2>
-    <div class="movie-list" id="upcoming-movies">Loading...</div>
+<section>
+  <h2>Past Screenings</h2>
+  <div id="past"></div>
+</section>
 
-    <h2>Past Screenings</h2>
-    <div class="movie-list" id="past-movies">Loading...</div>
+  </main>  <script>
+    async function loadCSVData(url) {
+      const res = await fetch(url);
+      const text = await res.text();
+      const rows = text.trim().split('\n').map(row => row.split(','));
+      const headers = rows.shift();
+      return rows.map(row => Object.fromEntries(row.map((val, i) => [headers[i], val])));
+    }
 
-    <footer>
-      &copy; 2025 Lights, Camera, UV!
-    </footer>
-  </div>
+    function renderTable(data) {
+      let table = '<table><thead><tr>';
+      Object.keys(data[0]).forEach(key => {
+        table += `<th>${key}</th>`;
+      });
+      table += '</tr></thead><tbody>';
+      data.forEach(row => {
+        table += '<tr>';
+        Object.values(row).forEach(val => {
+          table += `<td>${val}</td>`;
+        });
+        table += '</tr>';
+      });
+      table += '</tbody></table>';
+      return table;
+    }
 
-  <script>
-    function fetchMovies(apiUrl, containerId, key) {{
-      fetch(apiUrl)
-        .then(res => res.json())
-        .then(data => {{
-          const list = document.getElementById(containerId);
-          list.innerHTML = "";
-          data[key].forEach(movie => {{
-            const div = document.createElement("div");
-            div.className = "movie";
-            div.innerHTML = "<strong>Movie:</strong> " + movie.movieTitle + "<br>" +
-                            "<strong>Picked by:</strong> " + movie.pickedBy + "<br>" +
-                            "<strong>Date:</strong> " + movie.date;
-            list.appendChild(div);
-          }});
-        }})
-        .catch(err => {{
-          document.getElementById(containerId).innerText = "Failed to load data.";
-          console.error(err);
-        }});
-    }}
+    async function init() {
+      const upcoming = await loadCSVData('https://docs.google.com/spreadsheets/d/e/2PACX-1vSrRnjooHdnGL3OARim9-6gD4RjXDTFhVY3Lb_i5sxq6YQJsVOhlcOfVfHblkT-6w_bDugpee3wVs_W/pub?gid=0&single=true&output=csv');
+      const past = await loadCSVData('https://docs.google.com/spreadsheets/d/e/2PACX-1vSrRnjooHdnGL3OARim9-6gD4RjXDTFhVY3Lb_i5sxq6YQJsVOhlcOfVfHblkT-6w_bDugpee3wVs_W/pub?gid=598421041&single=true&output=csv');
+      document.getElementById('upcoming').innerHTML = renderTable(upcoming);
+      document.getElementById('past').innerHTML = renderTable(past);
+    }
 
-    fetchMovies("{sheety_upcoming_url}", "upcoming-movies", "upcomingScreenings");
-    fetchMovies("{sheety_past_url}", "past-movies", "pastScreenings");
-  </script>
-</body>
+    init();
+  </script></body>
 </html>
-"""
-
-# Save the HTML file
-final_output_path = "/mnt/data/index.html"
-with open(final_output_path, "w", encoding="utf-8") as f:
-    f.write(html_with_intro_and_emblem)
-
-final_output_path
