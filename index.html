@@ -1,6 +1,5 @@
-# Regenerate HTML with left-aligned text and improved readability
-
-refined_html = """
+# Rebuild the HTML with corrected JavaScript formatting using doubled curly braces
+final_dynamic_html = f"""
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,58 +7,58 @@ refined_html = """
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Lights, Camera, UV!</title>
   <style>
-    body {
+    body {{
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
       background-color: #1e1e1e;
       color: #f5f5f5;
-      line-height: 1.8;
+      line-height: 1.6;
       padding: 20px;
-    }
-    .container {
+    }}
+    .container {{
       max-width: 900px;
       margin: auto;
-    }
-    header {
+    }}
+    header {{
       text-align: center;
       margin-bottom: 2rem;
-    }
-    header img {
+    }}
+    header img {{
       width: 200px;
       height: auto;
-    }
-    h1 {
+    }}
+    h1 {{
       color: #ffcc00;
       margin: 1rem 0 0.5rem;
-    }
-    .intro p {
+    }}
+    .intro p {{
       margin-bottom: 1.2rem;
       text-align: left;
       max-width: 750px;
       font-size: 1.05rem;
-    }
-    h2 {
+    }}
+    h2 {{
       color: #ffcc00;
       border-bottom: 2px solid #444;
       padding-bottom: 0.3rem;
-    }
-    .movie-list {
+    }}
+    .movie-list {{
       margin: 1rem 0 2rem;
-    }
-    .movie {
+    }}
+    .movie {{
       background-color: #2a2a2a;
       padding: 1rem;
       border-radius: 8px;
       margin-bottom: 1rem;
-    }
-    .movie strong {
+    }}
+    .movie strong {{
       color: #ffffff;
-    }
-    footer {
+    }}
+    footer {{
       text-align: center;
       margin-top: 3rem;
       color: #888;
-    }
+    }}
   </style>
 </head>
 <body>
@@ -71,47 +70,60 @@ refined_html = """
 
     <div class="intro">
       <p>Movies of faraway lands. Giving glimpses of a foreign culture, in a foreign tongue, yet shedding light on something of our own.</p>
-
       <p>Welcome to <strong>Lights, Camera, UV!</strong></p>
-
       <p>A space for those who truly live and breathe cinema — not just as entertainment, but as art, culture, and storytelling.</p>
-
       <p>This group is meant for movie connoisseurs and enthusiasts who appreciate brilliant films from across the globe — be it world cinema, Bollywood, Hollywood, indie gems, or rare festival classics. We would also welcome people into our group who want to start on a journey of exploring them.</p>
-
       <p>Here, we screen and discuss masterclass films that provoke thought, stir emotions, and offer a glimpse into faraway lands, unfamiliar cultures, and untold stories.</p>
-
       <p>Weekly screenings will be held in UV’s mini theatre, featuring classics, critically acclaimed films, hidden gems, and everything in between…</p>
     </div>
 
     <h2>Upcoming Screenings</h2>
-    <div class="movie-list" id="upcoming-movies">
-      <div class="movie">
-        <strong>Movie:</strong> The Lives of Others<br>
-        <strong>Picked by:</strong> Ananya<br>
-        <strong>Date:</strong> April 12, 2025
-      </div>
-    </div>
+    <div class="movie-list" id="upcoming"></div>
 
     <h2>Past Screenings</h2>
-    <div class="movie-list" id="past-movies">
-      <div class="movie">
-        <strong>Movie:</strong> In the Mood for Love<br>
-        <strong>Picked by:</strong> Rohan<br>
-        <strong>Date:</strong> April 5, 2025
-      </div>
-    </div>
+    <div class="movie-list" id="past"></div>
 
     <footer>
       &copy; 2025 Lights, Camera, UV!
     </footer>
   </div>
+
+  <script>
+    const upcomingURL = "{upcoming_gid_url}";
+    const pastURL = "{past_gid_url}";
+
+    async function loadCSVData(url, containerId) {{
+      const response = await fetch(url);
+      const data = await response.text();
+      const rows = data.trim().split('\\n').map(r => r.split(','));
+      const container = document.getElementById(containerId);
+
+      for (let i = 1; i < rows.length; i++) {{
+        const row = rows[i];
+        const date = row[0];
+        const title = row[1];
+        const pickedBy = row[2];
+        const movieHTML = `
+          <div class="movie">
+            <strong>Movie:</strong> ${{title}}<br>
+            <strong>Picked by:</strong> ${{pickedBy}}<br>
+            <strong>Date:</strong> ${{date}}
+          </div>
+        `;
+        container.innerHTML += movieHTML;
+      }}
+    }}
+
+    loadCSVData(upcomingURL, "upcoming");
+    loadCSVData(pastURL, "past");
+  </script>
 </body>
 </html>
 """
 
-# Save to index.html
-refined_html_path = "/mnt/data/index.html"
-with open(refined_html_path, "w", encoding="utf-8") as f:
-    f.write(refined_html)
+# Save the corrected HTML
+final_html_path = "/mnt/data/index.html"
+with open(final_html_path, "w", encoding="utf-8") as f:
+    f.write(final_dynamic_html)
 
-refined_html_path
+final_html_path
