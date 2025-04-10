@@ -1,24 +1,24 @@
-# Re-import required module after code execution environment reset
-html_file_path = "/mnt/data/index.html"
+# Correcting the JavaScript template string error by using string concatenation instead of template literals
 
-# Recreate the dynamic HTML file with provided CSV links
-upcoming_csv = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSrRnjooHdnGL3OARim9-6gD4RjXDTFhVY3Lb_i5sxq6YQJsVOhlcOfVfHblkT-6w_bDugpee3wVs_W/pub?gid=0&single=true&output=csv"
-past_csv = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSrRnjooHdnGL3OARim9-6gD4RjXDTFhVY3Lb_i5sxq6YQJsVOhlcOfVfHblkT-6w_bDugpee3wVs_W/pub?gid=598421041&single=true&output=csv"
+# Google Sheets CSV URLs
+upcoming_csv_url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSrRnjooHdnGL3OARim9-6gD4RjXDTFhVY3Lb_i5sxq6YQJsVOhlcOfVfHblkT-6w_bDugpee3wVs_W/pub?gid=0&single=true&output=csv"
+past_csv_url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSrRnjooHdnGL3OARim9-6gD4RjXDTFhVY3Lb_i5sxq6YQJsVOhlcOfVfHblkT-6w_bDugpee3wVs_W/pub?gid=598421041&single=true&output=csv"
 
-html_content = f"""
+# Corrected HTML content
+html_fixed = f"""
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Lights, Camera, UV! - Live</title>
+  <title>Lights, Camera, UV!</title>
   <style>
     body {{
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
       background-color: #1e1e1e;
       color: #f5f5f5;
-      line-height: 1.8;
+      line-height: 1.6;
       padding: 20px;
     }}
     .container {{
@@ -29,8 +29,17 @@ html_content = f"""
       text-align: center;
       margin-bottom: 2rem;
     }}
+    header img {{
+      width: 200px;
+      height: auto;
+    }}
     h1 {{
       color: #ffcc00;
+      margin: 1rem 0 0.5rem;
+    }}
+    .intro p {{
+      margin-bottom: 1.2rem;
+      text-align: justify;
     }}
     h2 {{
       color: #ffcc00;
@@ -46,6 +55,9 @@ html_content = f"""
       border-radius: 8px;
       margin-bottom: 1rem;
     }}
+    .movie strong {{
+      color: #ffffff;
+    }}
     footer {{
       text-align: center;
       margin-top: 3rem;
@@ -56,8 +68,18 @@ html_content = f"""
 <body>
   <div class="container">
     <header>
+      <img src="lights-camera-uv.jpg" alt="Lights Camera UV Logo" />
       <h1>Lights, Camera, UV!</h1>
     </header>
+
+    <div class="intro">
+      <p>Movies of faraway lands. Giving glimpses of a foreign culture, in a foreign tongue, yet shedding light on something of our own.</p>
+      <p>Welcome to <strong>Lights, Camera, UV!</strong></p>
+      <p>A space for those who truly live and breathe cinema — not just as entertainment, but as art, culture, and storytelling.</p>
+      <p>This group is meant for movie connoisseurs and enthusiasts who appreciate brilliant films from across the globe — be it world cinema, Bollywood, Hollywood, indie gems, or rare festival classics. We would also welcome people into our group who want to start on a journey of exploring them.</p>
+      <p>Here, we screen and discuss masterclass films that provoke thought, stir emotions, and offer a glimpse into faraway lands, unfamiliar cultures, and untold stories.</p>
+      <p>Weekly screenings will be held in UV’s mini theatre, featuring classics, critically acclaimed films, hidden gems, and everything in between…</p>
+    </div>
 
     <h2>Upcoming Screenings</h2>
     <div class="movie-list" id="upcoming-movies">Loading...</div>
@@ -65,7 +87,9 @@ html_content = f"""
     <h2>Past Screenings</h2>
     <div class="movie-list" id="past-movies">Loading...</div>
 
-    <footer>&copy; 2025 Lights, Camera, UV!</footer>
+    <footer>
+      &copy; 2025 Lights, Camera, UV!
+    </footer>
   </div>
 
   <script>
@@ -73,7 +97,7 @@ html_content = f"""
       try {{
         const response = await fetch(sheetUrl);
         const text = await response.text();
-        const rows = text.trim().split('\\n').slice(1); // Skip header
+        const rows = text.trim().split('\\n').slice(1);
         const container = document.getElementById(containerId);
         container.innerHTML = '';
 
@@ -95,14 +119,16 @@ html_content = f"""
       }}
     }}
 
-    loadMovies("{upcoming_csv}", "upcoming-movies");
-    loadMovies("{past_csv}", "past-movies");
+    loadMovies("{upcoming_csv_url}", "upcoming-movies");
+    loadMovies("{past_csv_url}", "past-movies");
   </script>
 </body>
 </html>
 """
 
-with open(html_file_path, "w", encoding="utf-8") as f:
-    f.write(html_content)
+# Save the fixed HTML
+fixed_html_path = "/mnt/data/index.html"
+with open(fixed_html_path, "w", encoding="utf-8") as f:
+    f.write(html_fixed)
 
-html_file_path
+fixed_html_path
